@@ -1,0 +1,72 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Configure Android SDK
+        run: |
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-$HOME/Android/Sdk}}"
+          mkdir -p "$SDK_ROOT/cmdline-tools"
+          echo "SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          if [ ! -d "$SDK_ROOT/cmdline-tools/latest" ] && [ ! -d "$SDK_ROOT/cmdline-tools/tools" ]; then
+            curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o cmdline-tools.zip
+            unzip -q cmdline-tools.zip -d "$SDK_ROOT/cmdline-tools"
+            mv "$SDK_ROOT/cmdline-tools/cmdline-tools" "$SDK_ROOT/cmdline-tools/latest"
+            rm cmdline-tools.zip
+          fi
+          yes | sdkmanager --sdk_root="$SDK_ROOT" --licenses >/dev/null 2>&1 || true
+          sdkmanager --sdk_root="$SDK_ROOT" "platforms;android-34" "platforms;android-35" "build-tools;34.0.0" >/dev/null 2>&1 || true
+
+      - name: Prepare debug keystore
+        run: |
+          if [ ! -f "debug.keystore" ]; then
+            keytool -genkeypair -v \
+              -keystore debug.keystore \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
+      - name: Build Debug APK
+        run: |
+          PROJECT_DIR="."
+          if [ ! -f "./gradlew" ] && [ ! -f "./build.gradle" ] && [ ! -f "./build.gradle.kts" ]; then
+            FOUND_GRADLEW=$(find . -maxdepth 3 -name "gradlew" | head -n 1)
+            if [ -n "$FOUND_GRADLEW" ]; then
+              PROJECT_DIR="$(dirname "$FOUND_GRADLEW")"
+            fi
+          fi
+          cd "$PROJECT_DIR"
+          if [ -f "./gradlew" ]; then
+            chmod +x gradlew
+            ./gradlew assembleDebug --stacktrace
+          else
+            gradle assembleDebug --stacktrace
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Built-APK
+          path: "**/build/outputs/apk/debug/*.apk"
