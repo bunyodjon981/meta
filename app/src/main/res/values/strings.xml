@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">APK Forge</string>
+    <string name="nav_create_apk">APK yaratish</string>
+    <string name="nav_my_apks">Mening APKlarim</string>
+    <string name="hero_subtitle">GitHub Cloud Build Pipeline</string>
+    <string name="hero_title">ZIP dan tayyor APK ga</string>
+    <string name="notifications_label">Bildirishnomalar</string>
+    <string name="notifications_on">Yoqilgan</string>
+    <string name="notifications_off">Oʻchirilgan</string>
+    <string name="github_username_label">GitHub Username</string>
+    <string name="github_username_hint">masalan: bunyodjon-dev</string>
+    <string name="github_token_label">GitHub Token (Parol / PAT)</string>
+    <string name="github_token_hint">ghp_... yoki github_pat_...</string>
+    <string name="repo_name_label">Repository nomi</string>
+    <string name="repo_name_hint">masalan: mening-ilovam</string>
+    <string name="private_repo_label">Maxfiy (Private) repo</string>
+    <string name="pick_zip_button">ZIP faylni tanlash</string>
+    <string name="change_zip_button">Boshqa ZIP tanlash</string>
+    <string name="start_build_button">Yuklash va APK yaratish</string>
+    <string name="cancel_build_button">Jarayonni toʻxtatish</string>
+    <string name="terminal_title">forge-cli — real-time terminal</string>
+    <string name="download_ready_apk">Tayyor APK ni yuklab olish</string>
+    <string name="open_share_apk">Ulashish / Ochish</string>
+    <string name="save_to_downloads">Downloads ga saqlash</string>
+    <string name="empty_apks_title">Hali APK yaratilmagan</string>
+    <string name="empty_apks_subtitle">Android Studio yoki AI Studio loyiha ZIP faylini yuklang — GitHub uni avtomatik yigʻib, bu yerga tayyor APK sifatida saqlaydi.</string>
+    <string name="go_to_builder">APK yaratishga oʻtish</string>
+    <string name="notif_channel_build_name">APK yigʻish jarayoni</string>
+    <string name="notif_channel_build_desc">GitHub orqali APK yaratish jarayoni va tayyor APK bildirishnomalari</string>
+    <string name="notif_building_title">APK yigʻilmoqda...</string>
+    <string name="notif_ready_title">APK tayyor!</string>
+    <string name="notif_failed_title">APK yaratishda xatolik</string>
+</resources>
